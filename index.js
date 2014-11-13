@@ -1,7 +1,8 @@
 /*
-	Name:kudoAds 基础模型
+	Name:vitex
 	Author:skipify
 	Version:0.0.1
+	Email:skipify@qq.com
 */
 var mongodb  = require('mongodb'),
 	ObjectID = mongodb.ObjectID,
