@@ -100,9 +100,85 @@ vitex
 	@param function 回调函数
 	@param boolean  是否输出explain信息
 	查询信息
+	** 这里有一个注意事件，如果调用了where方法，然后调用 find方法，那么查询条件将会缓存下来供给count方法直接无条件调用 **
 	model.find(function(err,docs){
 		console.log(docs);
 	})
 	
+### count  
+	@param function 回调函数
+	按照条件查询符合条件的数目 注意find方法的说明
+	model.count(function(err,num){
+		console.log(num);
+	})
 
+### findOne
+	同find,此方法返回的 doc是单条信息
 
+### remove
+	@param object/function 删除信息的配置项/回调函数，参考mongodb-native接口
+	@param function 回调
+	
+	删除信息
+	model.remove(function(err,result){
+
+	})
+
+### removeOne
+	同remove 删除一条信息
+
+### save
+	@param object 要保存的对象记录
+	@param object/function 配置项/回调函数，配置项参考mongodb-native接口
+	@param function 回调函数
+	model.save({a:1},function(err,result){
+		
+	})
+
+### update
+	@param object 要保存的对象记录
+	@param object/function 配置项/回调函数，配置项参考mongodb-native接口
+	@param function 回调函数
+	model.update({a:1},function(err,result){
+	})
+	
+	model.update({a:{$inc:{step:1}}},function(err,result){
+
+	})
+
+### updateOne
+	同update，修改一条信息	
+
+### page
+	@param int 页数
+	@param int 每页条数
+	@param function 回调函数 {total:num,data:docs}
+	
+	一个组合类的方法，此方法用于查询分页的快捷方式，注意返回的数据信息中包含符合条件的总条数
+	model.page(2,20,function(err,data){
+		console.log("num："+data.total);
+		console.log(data.data);
+	})
+
+### dropCollection
+	@param string 要删除的集合名
+	@param function
+	
+	model.dropCollection('users',function(err,result){})
+
+## close
+	关闭连接
+	model.close();
+
+## 快捷方式
+
+### findById
+	@param int 要查询的ID
+	@param function 回调
+	model.findById(1,function(err,doc){
+	})
+### removeById
+	@param int 要删除的ID
+	@param function 回调
+	model.removeById(1,function(err,result){
+	})

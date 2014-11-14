@@ -424,11 +424,9 @@ Model.prototype.update = function(doc,opt,callback){
 	}
 	var _c = this._config;
 		_c.collection = _c.collection || this._dc,
-		multi = false;
+		multi = opt.multi || true;
 	if(opt.multi)
 	{
-		//$ 操作符修改多个数据
-		multi = true;
 		delete opt['multi'];
 	}
 
@@ -452,7 +450,7 @@ Model.prototype.update = function(doc,opt,callback){
 	修改一个
  */
 Model.prototype.updateOne = function(doc,opt,callback){
-	opt.multi = true;
+	opt.multi = false;
 	this.update.call(null,doc,opt,callback);
 }
 /*
@@ -529,7 +527,7 @@ Model.prototype.close = function(){
 Model.prototype.findById = function(id,callback){
 	//id = new ObjectID(id);
 	this.where({_id:id});
-	this.find(callback);
+	this.findOne(callback);
 }
 
 /*
@@ -538,7 +536,7 @@ Model.prototype.findById = function(id,callback){
 Model.prototype.removeById = function(id,callback){
 	//id = new ObjectID(id);
 	this.where({_id:id});
-	this.remove(callback);
+	this.removeOne(callback);
 }
 
 
