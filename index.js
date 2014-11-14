@@ -6,10 +6,9 @@
 */
 var mongodb  = require('mongodb'),
 	ObjectID = mongodb.ObjectID,
-	autoInc = true;
+	mongodbConfig,
+	_        = require('underscore');;
     _mdcache = {}; //链接缓存 global
-var _        = require('underscore');
-var setting  = require('../data/config');
 var mongoOptions = {
             "server" : {
                 "poolSize" : 10
@@ -33,20 +32,31 @@ var Model    = function(dc,opt){
 
 	this.countConfig  = {};//方便find之后使用count查询，会缓存一次查询条件
 	this._dc          = dc;//持久保存的集合名字，不会因为查询完毕而丢失当不指定from的时候会自动应用dc
-	this.autoInc      = opt.autoInc === undefined ? autoInc :opt.autoInc;
+	this.autoInc      = opt.autoInc === undefined ? true :opt.autoInc;
+	if(opt.settingFile){
+		var setting = require(opt.settingFile);
+		mongodbConfig = setting.mongodb;
+	}
+	if(opt.setting)
+	{
+		mongodbConfig = opt.setting;
+	}
+	if(!mongodbConfig || mongodbConfig.length == 0)
+	{
+		throw new Error('No Connect Config found');
+	}
+	mongodbConfig     = '';
 	/*
 		初始化信息
 	*/
-	this._config = _.defaults(
-	(opt || {}),
-	{
+	this._config = {
 		collection:'',
 		where:{},
 		fields:{},
 		limit:0,
 		skip:0,
 		sort:{}
-	});
+	};
 	return this;
 }
 
@@ -143,7 +153,7 @@ Model.prototype.resetConfig = function(){
 	return this;
 }
 //创建数据库连接
-var connect = createConnect(connectString(setting.mongodb));
+var connect = createConnect(connectString(mongodbConfig));
 
 /*
 	设置查询条件
