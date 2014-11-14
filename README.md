@@ -32,14 +32,14 @@ Setting:
 
 数据库的配置文件格式：
 
->	mongodb: [{  
-        host: "127.0.0.1" ,  
-        port: "27017" ,  
-        database: "xxx",  
-        replicaSet:"",//集群名  
-        username:"",  
-        password:""  
->	}]
+>mongodb: [{  
+    host: "127.0.0.1" ,  
+    port: "27017" ,  
+    database: "xxx",  
+    replicaSet:"",//集群名  
+    username:"",  
+    password:""  
+>}]
 
 文件配置：
 >module.exports = {  
