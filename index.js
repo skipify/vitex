@@ -33,7 +33,7 @@ var Model    = function(dc,opt){
 
 	this.countConfig  = {};//方便find之后使用count查询，会缓存一次查询条件
 	this._dc          = dc;//持久保存的集合名字，不会因为查询完毕而丢失当不指定from的时候会自动应用dc
-	this.autoInc      = autoInc;
+	this.autoInc      = opt.autoInc === undefined ? autoInc :opt.autoInc;
 	/*
 		初始化信息
 	*/
