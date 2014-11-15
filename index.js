@@ -234,7 +234,7 @@ Model.prototype.sort = function(obj){
 	explain 是否输出查询explain信息
  */
 Model.prototype.find = function(callback,explain){
-	var _c = this._config;
+	var _c = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc,
 		that = this;
 	this.connect(function(db){
@@ -272,7 +272,7 @@ Model.prototype.find = function(callback,explain){
 	findone
  */
 Model.prototype.findOne = function(callback,explain){
-	var _c = this._config;
+	var _c = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc,
 		that = this;
 	this.connect(function(db){
@@ -303,7 +303,7 @@ Model.prototype.findOne = function(callback,explain){
 
  */
 Model.prototype.count = function(callback){
-	var _c   = this._config,
+	var _c   = _.defaults({},this._config),
 		that = this;
 		_c.collection = _c.collection || this._dc;
 	this.connect(function(db){
@@ -336,9 +336,10 @@ Model.prototype.remove = function(opt,callback){
 		callback = opt;
 		opt = {w:1};
 	}
-	var _c = this._config;
+	var _c = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc;
 	this.connect(function(db){
+		console.log(_c);
 		db.collection(_c.collection).deleteMany(_c.where,opt,function(err,result){
 			callback !== undefined ? callback.apply(null,arguments):'';
 		});
@@ -354,7 +355,7 @@ Model.prototype.removeOne = function(opt,callback){
 		callback = opt;
 		opt = {w:1};
 	}
-	var _c = this._config;
+	var _c = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc;
 	this.connect(function(db){
 		db.collection(_c.collection).deleteOne(_c.where,opt,function(err,result){
