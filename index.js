@@ -339,7 +339,6 @@ Model.prototype.remove = function(opt,callback){
 	var _c = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc;
 	this.connect(function(db){
-		console.log(_c);
 		db.collection(_c.collection).deleteMany(_c.where,opt,function(err,result){
 			callback !== undefined ? callback.apply(null,arguments):'';
 		});
