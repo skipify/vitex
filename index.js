@@ -23,7 +23,6 @@ var mongoOptions = {
 
  */
 var Model    = function(dc,opt){
-
 	if(_.isObject(dc))
 	{
 		dc  = '';
@@ -33,6 +32,7 @@ var Model    = function(dc,opt){
 	this.countConfig  = {};//方便find之后使用count查询，会缓存一次查询条件
 	this._dc          = dc;//持久保存的集合名字，不会因为查询完毕而丢失当不指定from的时候会自动应用dc
 	this.autoInc      = opt.autoInc === undefined ? true :opt.autoInc;
+
 	if(opt.settingFile){
 		var setting = require(opt.settingFile);
 		mongodbConfig = setting.mongodb;
@@ -45,7 +45,9 @@ var Model    = function(dc,opt){
 	{
 		throw new Error('No Connect Config found');
 	}
-	mongodbConfig     = '';
+	//创建数据库连接
+	this.connect = createConnect(connectString(mongodbConfig));
+
 	/*
 		初始化信息
 	*/
@@ -65,7 +67,7 @@ var Model    = function(dc,opt){
 	输出查询配置信息
  */
 Model.prototype.test = function(){
-	console.dir(this._config);
+	console.log(this._config);
 	return this;
 }
 
@@ -84,6 +86,10 @@ Model.prototype.endureCollection = function( c ){
  */
 var connectString = function(dbs){
 	var url = '';
+	if(!dbs)
+	{
+		throw new Error('Can not find Connect config,please set setting or settingFile option');
+	}
 	if(dbs.length == 1){
 		//单数据库
 		db = dbs[0];
@@ -152,8 +158,7 @@ Model.prototype.resetConfig = function(){
 	}
 	return this;
 }
-//创建数据库连接
-var connect = createConnect(connectString(mongodbConfig));
+
 
 /*
 	设置查询条件
@@ -232,7 +237,7 @@ Model.prototype.find = function(callback,explain){
 	var _c = this._config;
 		_c.collection = _c.collection || this._dc,
 		that = this;
-	connect(function(db){
+	this.connect(function(db){
 		var opt = {};
 		if(_c.skip){
 			opt.skip = _c.skip;
@@ -270,7 +275,7 @@ Model.prototype.findOne = function(callback,explain){
 	var _c = this._config;
 		_c.collection = _c.collection || this._dc,
 		that = this;
-	connect(function(db){
+	this.connect(function(db){
 		var opt = {};
 		if(_c.fields){
 			opt.fields = _c.fields;
@@ -301,7 +306,7 @@ Model.prototype.count = function(callback){
 	var _c   = this._config,
 		that = this;
 		_c.collection = _c.collection || this._dc;
-	connect(function(db){
+	this.connect(function(db){
 		var where = {};
 		if(_c.collection){
 				where = _c.where;
@@ -333,8 +338,8 @@ Model.prototype.remove = function(opt,callback){
 	}
 	var _c = this._config;
 		_c.collection = _c.collection || this._dc;
-	connect(function(db){
-		db.collection(_c.collection).removeMany(_c.where,opt,function(err,result){
+	this.connect(function(db){
+		db.collection(_c.collection).deleteMany(_c.where,opt,function(err,result){
 			callback !== undefined ? callback.apply(null,arguments):'';
 		});
 	});
@@ -351,8 +356,8 @@ Model.prototype.removeOne = function(opt,callback){
 	}
 	var _c = this._config;
 		_c.collection = _c.collection || this._dc;
-	connect(function(db){
-		db.collection(_c.collection).removeOne(_c.where,opt,function(err,result){
+	this.connect(function(db){
+		db.collection(_c.collection).deleteOne(_c.where,opt,function(err,result){
 			callback !== undefined ? callback.apply(null,arguments):'';
 		});
 	});
@@ -372,7 +377,7 @@ Model.prototype.save = function(doc,opt,callback){
 		_c.collection = _c.collection || this._dc,
 		that = this;
 
-	connect(function(db){
+	this.connect(function(db){
 		var insert = function(doc){
 			if(_.isArray(doc))
 			{
@@ -430,7 +435,7 @@ Model.prototype.update = function(doc,opt,callback){
 		delete opt['multi'];
 	}
 
-	connect(function(db){
+	this.connect(function(db){
 		if(multi)
 		{
 			db.collection(_c.collection).updateMany(_c.where,doc,opt,function(err,result){
@@ -487,7 +492,7 @@ Model.prototype.page = function(page,num,callback){
  */
 Model.prototype.dropCollection = function(name,callback){
 	var that = this;
-	connect(function(db){
+	this.connect(function(db){
 		db.dropCollection(name,function(err,result){
 			callback != undefined ? callback.apply(null,arguments) : '';
 			//如果是自增的则清空自增列表
@@ -506,7 +511,7 @@ Model.prototype.dropCollection = function(name,callback){
 	关闭连接
  */
 Model.prototype.close = function(){
-	connect(function(db){
+	this.connect(function(db){
 		for(var m in _mdcache){
 			if(_mdcache[m] == db){
 				delete _mdcache[m];
@@ -595,7 +600,7 @@ Model.prototype.autoIncId = function(c,step,callback)
 	if(!c){
 		throw new Error('can not find collection for autoIncrement');
 	}
-	connect(function(db){
+	this.connect(function(db){
 		db.collection('autoIncIds').findAndModify({_id:c},{},{$inc:{val:step}},{w:1,upsert:true},function(err,doc){
 			if(err)
 			{
@@ -617,7 +622,7 @@ Model.prototype.autoIncId = function(c,step,callback)
 	});
  */
 Model.prototype.exec    = function(callback){
-	connect(function(db){
+	this.connect(function(db){
 		callback.apply(null,arguments);
 	});
 }
