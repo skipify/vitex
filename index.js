@@ -614,7 +614,7 @@ Model.prototype.autoIncId = function(c,step,callback)
 /*
 	test:
 	一个mongodb的简单封装
-	$.mongodb(function(db){
+	model.exec(function(db){
 		db.collection('test').ensureIndex('ee',{step:1},function(err,indexName){
 			console.log(indexName);
 		})
@@ -623,6 +623,7 @@ Model.prototype.autoIncId = function(c,step,callback)
  */
 Model.prototype.exec    = function(callback){
 	this.connect(function(db){
+		console.log(arguments);
 		callback.apply(null,arguments);
 	});
 }

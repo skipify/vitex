@@ -165,7 +165,7 @@ vitex
 	
 	model.dropCollection('users',function(err,result){})
 
-## close
+### close
 	关闭连接
 	model.close();
 
@@ -181,3 +181,16 @@ vitex
 	@param function 回调
 	model.removeById(1,function(err,result){
 	})
+
+## 调用原生接口
+### exec
+
+	此方法可以直接调用[node-mongodb-native](https://github.com/mongodb/node-mongodb-native)接口的问题。
+	model.exec(function(db){
+		db.collection('test').ensureIndex('ee',{step:1},function(err,indexName){
+			console.log(indexName);
+		})
+		//db 可以使用
+	});
+### mongodb
+	此方法是个类方法，他返回node-mongodb-native的接口对象，相当于 require("mongodb");
