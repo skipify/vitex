@@ -249,6 +249,9 @@ Model.prototype.find = function(callback,explain){
 		if(_c.fields){
 			opt.fields = _c.fields;
 		}
+		if(_c.sort){
+			opt.sort = _c.sort;
+		}		
 		if(!_c.collection){
 			throw new Error('No Collection specified');
 		}
@@ -280,6 +283,10 @@ Model.prototype.findOne = function(callback,explain){
 		if(_c.fields){
 			opt.fields = _c.fields;
 		}
+		if(_c.sort){
+			opt.sort = _c.sort;
+		}
+		
 		if(!_c.collection){
 			throw new Error('No Collection specified');
 		}
@@ -309,7 +316,7 @@ Model.prototype.count = function(callback){
 	this.connect(function(db){
 		var collection = _c.collection || that.countConfig.collection;
 		var where      = _.isEmpty(_c.where) ? that.countConfig.where : _c.where;
-		
+
 		if(!collection){
 			throw new Error('No Collection specified');
 		}
