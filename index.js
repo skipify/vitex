@@ -307,14 +307,9 @@ Model.prototype.count = function(callback){
 		that = this;
 		_c.collection = _c.collection || this._dc;
 	this.connect(function(db){
-		var where = {};
-		if(_c.collection){
-				where = _c.where;
-			var collection = _c.collection;
-		}else if(!_.isEmpty(that.countConfig)){
-				where = that.countConfig.where;
-			var collection = that.countConfig.collection;
-		}
+		var collection = _c.collection || that.countConfig.collection;
+		var where      = _.isEmpty(_c.where) ? that.countConfig.where : _c.where;
+		
 		if(!collection){
 			throw new Error('No Collection specified');
 		}
