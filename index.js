@@ -23,6 +23,10 @@ var mongoOptions = {
 
  */
 var Model    = function(dc,opt){
+	if(!(this instanceof Model))
+	{
+		return new Model(dc,opt);
+	}
 	if(_.isObject(dc))
 	{
 		dc  = '';
@@ -33,13 +37,13 @@ var Model    = function(dc,opt){
 	this._dc          = dc;//持久保存的集合名字，不会因为查询完毕而丢失当不指定from的时候会自动应用dc
 	this.autoInc      = opt.autoInc === undefined ? true :opt.autoInc;
 
-	if(opt.settingFile){
-		var setting = require(opt.settingFile);
-		mongodbConfig = setting.mongodb;
+	if(opt.file){
+		var setting = require(opt.file);
+		mongodbConfig = setting;
 	}
-	if(opt.setting)
+	if(opt.mongodb)
 	{
-		mongodbConfig = opt.setting;
+		mongodbConfig = opt.mongodb;
 	}
 	if(!mongodbConfig || mongodbConfig.length == 0)
 	{
@@ -89,6 +93,10 @@ var connectString = function(dbs){
 	if(!dbs)
 	{
 		throw new Error('Can not find Connect config,please set setting or settingFile option');
+	}
+	if(!_.isArray(dbs))
+	{
+		dbs = [dbs];
 	}
 	if(dbs.length == 1){
 		//单数据库
@@ -375,7 +383,7 @@ Model.prototype.save = function(doc,opt,callback){
 		callback = opt;
 		opt = {w:1};
 	}
-	var _c = this._config;
+	var _c = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc,
 		that = this;
 
@@ -429,14 +437,13 @@ Model.prototype.update = function(doc,opt,callback){
 		callback = opt;
 		opt = {w:1};
 	}
-	var _c = this._config;
+	var _c = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc,
 		multi = opt.multi || true;
 	if(opt.multi)
 	{
 		delete opt['multi'];
 	}
-
 	this.connect(function(db){
 		if(multi)
 		{
@@ -608,7 +615,13 @@ Model.prototype.autoIncId = function(c,step,callback)
 			{
 				throw new Error('cant not create auto increment id');
 			}
-			callback.call(null,(doc.value.val + 1));
+			if(!doc.value.val)
+			{
+				callback.call(null,1);
+			}else{
+				callback.call(null,(doc.value.val + 1));
+			}
+			
 		});
 	});
 }

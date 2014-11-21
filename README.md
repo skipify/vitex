@@ -8,7 +8,7 @@ vitex
 
 #Sample
 	var Vitex = require('vitex');  
-	var model = new Vitex('collection');  
+	var model = Vitex('collection',{file:'./config'});  
 	model.where("_id",id).find(function(err,docs){  
 	    console.log(docs);  
 	})
@@ -22,8 +22,8 @@ vitex
 
 ##如果配置项是对象参数：
 
-	1.settingFile Mongodb配置文件的地址 会调用 require(settingFile)  
-	2.settingConfgig Mongodb的配置变量，此设置的优先级高于settingFile  
+	1.file Mongodb配置文件的地址 会调用 require(file)  
+	2.mongodb Mongodb的配置变量，此设置的优先级高于 file
 	3.autoInc  是否放弃使用Mongodb自己的ObjectId 方法使用一个从1开始的自增ID，默认是True
 	** 如果配置项是字符串参数 **  
 	4.dc 持久保存的集合名字，不会因为查询完毕而丢失当不指定from的时候会自动应用dc  
@@ -58,7 +58,7 @@ vitex
 以下示例基于  
 
 	var Vitex = require("vitex");  
-	var model = new Vitex("col");
+	var model = Vitex("col",{file:'./config'});
 
 ## Method  
 ### endureCollection  
