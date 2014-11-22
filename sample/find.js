@@ -7,3 +7,4 @@ vitex('infos',{file:__dirname + '/config'}).find(function(err,doc){
 vitex({file:__dirname + '/config'}).from('infos').find(function(err,doc){
 	console.log(doc);
 })
+
