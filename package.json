@@ -1,6 +1,6 @@
 {
   "name": "vitex",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "sql-like mongo wrapper",
   "main": "index.js",
   "scripts": {
