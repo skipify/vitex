@@ -136,7 +136,7 @@ function createConnect (url) {
             mongodb.MongoClient.connect(url, mongoOptions, function (err, db) {
                 if (err) { 
                 	//更友好的错误处理。。。
-                	throw err; 
+                	throw new Error('Can not connect to mongodb server:' + url); 
 
                 }
                 _db = _mdcache[url] = db;
