@@ -76,6 +76,11 @@ vitex
 	设置查询的条件  
 	model.where("_id",id)  
 	model.where({_id:id})
+### like
+	@param key string 字段
+	@param val string/regexp 字符串或者正则表达式
+	模糊查询，
+
 
 ### select  
 	@param string/object/array  

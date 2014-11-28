@@ -189,6 +189,20 @@ Model.prototype.where = function(k,v){
 	return this;
 }
 /*
+	模糊查询
+	@param string
+	@param string/regexp
+*/
+Model.prototype.like = function(key,val){
+	if(_.isRegExp(val))
+	{
+		this.where(key,val);
+	}else{
+		this.where(key,{ $regex: val });
+	}
+	return this;
+}
+/*
 	选择集合
 */
 Model.prototype.from = function(collection){
