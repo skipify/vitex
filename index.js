@@ -61,7 +61,8 @@ var Model    = function(dc,opt){
 		fields:{},
 		limit:0,
 		skip:0,
-		sort:{}
+		sort:{},
+		set : {}
 	};
 	return this;
 }
@@ -136,7 +137,7 @@ function createConnect (url) {
             mongodb.MongoClient.connect(url, mongoOptions, function (err, db) {
                 if (err) { 
                 	//更友好的错误处理。。。
-                	throw new Error('Can not connect to mongodb server:' + url); 
+                	throw new Error('Can not connect to mongodb server' + url); 
 
                 }
                 _db = _mdcache[url] = db;
@@ -155,7 +156,8 @@ Model.prototype.resetConfig = function(){
 		fields : {},
 		limit : 0,
 		skip : 0,
-		sort : {}
+		sort : {},
+		set : {}
 	};
 	for(var i in def)
 	{
@@ -248,6 +250,19 @@ Model.prototype.limit = function(limit,skip){
 */
 Model.prototype.sort = function(obj){
 	this._config.sort = obj;
+	return this;
+}
+/*
+	设置要修改的字段
+ */
+Model.prototype.set = function(k,v){
+	if(_.isObject(k)){
+		for(var i in k){
+			this._config.set[i] = k[i];
+		}
+	}else{
+		this._config.set[k] = v;
+	}
 	return this;
 }
 /*
@@ -451,12 +466,18 @@ Model.prototype.update = function(doc,opt,callback){
 		callback = opt;
 		opt = {w:1};
 	}
-	var _c = _.defaults({},this._config);
+	var _c    = _.defaults({},this._config);
 		_c.collection = _c.collection || this._dc,
+		opt   = opt || {};
 		multi = opt.multi || true;
 	if(opt.multi)
 	{
 		delete opt['multi'];
+	}
+	//doc
+	if(!doc || _.isEmpty(doc)){
+		var _doc = this._config.set;
+			doc  = {$set:_doc};
 	}
 	this.connect(function(db){
 		if(multi)

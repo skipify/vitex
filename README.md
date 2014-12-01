@@ -99,6 +99,13 @@ vitex
 	@param object  
 	排序字段设置  
 	model.sort({age:-1,step:-1})  
+### set
+	@param string/object  
+	@param string/object  
+	设置update时修改的字段  
+	eg:    
+	vitex.set('username',"skipify")  
+	vitex.set({username:"skipify","password":"123456"});
 
 ### find
 	@param function 回调函数
