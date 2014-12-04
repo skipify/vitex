@@ -478,6 +478,8 @@ Model.prototype.update = function(doc,opt,callback){
 	if(!doc || _.isEmpty(doc)){
 		var _doc = this._config.set;
 			doc  = {$set:_doc};
+	}else{
+		doc = {$set:doc};
 	}
 	this.connect(function(db){
 		if(multi)
