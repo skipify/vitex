@@ -553,6 +553,16 @@ Model.prototype.dropCollection = function(name,callback){
 		});
 	});
 }
+//步增
+Model.prototype.step(field,step,callback){
+	if(typeof step === 'function'){
+		callback = step;
+		step     = null;
+	}
+	step = step || 1;
+
+	this.update({$inc:{field:step}},callback);
+}
 /*
 	关闭连接
  */
