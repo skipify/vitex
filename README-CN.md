@@ -1,6 +1,6 @@
 vitex
 =====
-	This encapsulates an native-mongodb interface，like model.from('collection').where('_id',id).find()
+	这里封装了native-mongodb接口，提供了一种类似于 model.from('collection').where('_id',id).find()的使用方法    
 
 #INSTALL
 
@@ -20,16 +20,15 @@ vitex
 
 #SETTING
 
-## is Object：
+##如果配置项是对象参数：
 
-	1.`file` Mongodb config file require(file)  
-	2.`mongodb` Mongodb config，The setting of higher priority file
-	3.`autoInc`  _id is an auto  Increment Default:True 
-	** is String **  
-	4.`dc` 
-	Persisted, a collection of name will not be lost because the query is completed will be automatically applied when does not specify the from dc
+	1.file Mongodb配置文件的地址 会调用 require(file)  
+	2.mongodb Mongodb的配置变量，此设置的优先级高于 file
+	3.autoInc  是否放弃使用Mongodb自己的ObjectId 方法使用一个从1开始的自增ID，默认是True
+	** 如果配置项是字符串参数 **  
+	4.dc 持久保存的集合名字，不会因为查询完毕而丢失当不指定from的时候会自动应用dc  
 
-## mongodb：
+##数据库的配置文件格式：
 
 	mongodb: [{  
 	    host: "127.0.0.1" ,  
@@ -40,14 +39,14 @@ vitex
 	    password:""  
 	}]
 
-##file：
+##文件配置：
 
 	module.exports = {  
 	    mongodb: [{  
 	        host: "127.0.0.1" ,  
 	        port: "27017" ,  
 	        database: "xxx",  
-	        replicaSet:"",  
+	        replicaSet:"",//集群名  
 	        username:"",  
 	        password:""  
 	    }]  
@@ -56,7 +55,7 @@ vitex
 
 
 #API  
-base on:  
+以下示例基于  
 
 	var Vitex = require("vitex");  
 	var model = Vitex("col",{file:'./config'});
