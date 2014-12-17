@@ -220,12 +220,12 @@ Model.prototype.from = function(collection){
 */
 Model.prototype.select = function(field){
 	var _fields = {};
-	if(_.isObject(field)){
-		_fields = field;
-	}else if(_.isArray(field)){
+	if(_.isArray(field)){
 		field.forEach(function(f){
 			_fields[f] = 1;
 		});
+	}else if(_.isObject(field)){
+		_fields = field;
 	}else{
 		_fields[field] = 1;
 	}
