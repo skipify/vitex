@@ -1,7 +1,7 @@
 /*
 	Name:vitex
 	Author:skipify
-	Version:0.0.1
+	Version:0.0.10
 	Email:skipify@qq.com
 */
 var mongodb  = require('mongodb'),
