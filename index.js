@@ -478,8 +478,6 @@ Model.prototype.update = function(doc,opt,callback){
 	if(!doc || _.isEmpty(doc)){
 		var _doc = this._config.set;
 			doc  = {$set:_doc};
-	}else{
-		doc = {$set:doc};
 	}
 	this.connect(function(db){
 		if(multi)
@@ -560,8 +558,9 @@ Model.prototype.step = function(field,step,callback){
 		step     = null;
 	}
 	step = step || 1;
-
-	this.update({$inc:{field:step}},callback);
+	var obj = {};
+		obj[field] = step;
+	this.update({$inc:obj},callback);
 }
 /*
 	关闭连接
