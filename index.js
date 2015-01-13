@@ -554,7 +554,7 @@ Model.prototype.dropCollection = function(name,callback){
 	});
 }
 //步增
-Model.prototype.step(field,step,callback){
+Model.prototype.step = function(field,step,callback){
 	if(typeof step === 'function'){
 		callback = step;
 		step     = null;
